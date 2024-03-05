@@ -1,4 +1,4 @@
-﻿namespace NetSchool.Common;
+﻿namespace DSRLearn.Common;
 
 using System.Collections.Generic;
 using System.Globalization;

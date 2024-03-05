@@ -1,4 +1,4 @@
-﻿namespace NetSchool.Common.Responses;
+﻿namespace DSRLearn.Common.Responses;
 
 public class ErrorResponse
 {

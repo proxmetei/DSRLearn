@@ -1,4 +1,4 @@
-﻿namespace NetSchool.Common;
+﻿namespace DSRLearn.Common;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Diagnostics.HealthChecks;

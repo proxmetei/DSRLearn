@@ -1,28 +1,44 @@
 using DSRLearn.Api;
+using DSRLearn.Api.Configuration;
+using DSRLearn.Services.Settings;
+using DSRLearn.Settings;
+
+var mainSettings = Settings.Load<MainSettings>("Main");
+var logSettings = Settings.Load<LogSettings>("Log");
+var swaggerSettings = Settings.Load<SwaggerSettings>("Swagger");
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
+builder.AddAppLogger(mainSettings, logSettings);
 
+var services = builder.Services;
 
-builder.Services.RegisterServices();
+services.AddHttpContextAccessor();
 
+services.AddAppCors();
 
+services.AddAppHealthChecks();
+
+services.AddAppVersioning();
+
+services.AddAppSwagger(mainSettings, swaggerSettings);
+
+services.AddAppAutoMappers();
+
+services.AddAppValidator();
+
+services.AddAppControllerAndViews();
+
+services.RegisterServices();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-}
-app.UseStaticFiles();
+app.UseAppCors();
 
-app.UseRouting();
+app.UseAppHealthChecks();
 
-app.UseAuthorization();
+app.UseAppSwagger();
 
-app.MapRazorPages();
+app.UseAppControllerAndViews();
 
 app.Run();

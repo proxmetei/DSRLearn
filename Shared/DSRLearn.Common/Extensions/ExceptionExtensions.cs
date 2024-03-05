@@ -1,4 +1,4 @@
-﻿namespace NetSchool.Common.Extensions;
+﻿namespace DSRLearn.Common.Extensions;
 
 using Exceptions;
 using Responses;

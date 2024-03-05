@@ -19,13 +19,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{B93C44E9-CD8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Worker", "Worker", "{C43DD5AB-B112-4450-A38A-D2CF6A0FEA5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSRLearn.Worker", "Systems\Worker\DSRLearn.Worker\DSRLearn.Worker.csproj", "{DBFD417E-74C6-4934-A104-CEB131A7AE02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSRLearn.Worker", "Systems\Worker\DSRLearn.Worker\DSRLearn.Worker.csproj", "{DBFD417E-74C6-4934-A104-CEB131A7AE02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSRLearn.Api", "Systems\Api\DSRLearn.Api\DSRLearn.Api.csproj", "{64660335-E90A-4401-B3EF-9A3D9E5A1A15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSRLearn.Api", "Systems\Api\DSRLearn.Api\DSRLearn.Api.csproj", "{64660335-E90A-4401-B3EF-9A3D9E5A1A15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSRLearn.Common", "Shared\DSRLearn.Common\DSRLearn.Common.csproj", "{82135847-0C75-469A-987F-0C7EC55DCF71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSRLearn.Common", "Shared\DSRLearn.Common\DSRLearn.Common.csproj", "{82135847-0C75-469A-987F-0C7EC55DCF71}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSRLearn.Services.Settings", "Services\NetSchool.Services.Settings\DSRLearn.Services.Settings.csproj", "{0F1A8E98-DEAF-4F34-BFBB-C18F801CD63D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSRLearn.Services.Logger", "Services\NetSchool.Services.Logger\DSRLearn.Services.Logger.csproj", "{66E593AA-B7D1-448B-A805-88CBFB79DFF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{0F1A8E98-DEAF-4F34-BFBB-C18F801CD63D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F1A8E98-DEAF-4F34-BFBB-C18F801CD63D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F1A8E98-DEAF-4F34-BFBB-C18F801CD63D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66E593AA-B7D1-448B-A805-88CBFB79DFF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66E593AA-B7D1-448B-A805-88CBFB79DFF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66E593AA-B7D1-448B-A805-88CBFB79DFF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66E593AA-B7D1-448B-A805-88CBFB79DFF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +67,7 @@ Global
 		{64660335-E90A-4401-B3EF-9A3D9E5A1A15} = {3033A2F8-A9BE-4389-AAA2-F7D8404D0933}
 		{82135847-0C75-469A-987F-0C7EC55DCF71} = {E4BE3F4D-2281-40D6-9D98-8CB280703461}
 		{0F1A8E98-DEAF-4F34-BFBB-C18F801CD63D} = {28D51352-44A7-42A8-9A22-CF73B7C35413}
+		{66E593AA-B7D1-448B-A805-88CBFB79DFF5} = {28D51352-44A7-42A8-9A22-CF73B7C35413}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5F1F1B22-84BF-47EE-8627-23E0129E7F95}

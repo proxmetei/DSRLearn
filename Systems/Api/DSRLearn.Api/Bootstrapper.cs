@@ -1,6 +1,7 @@
 ﻿namespace DSRLearn.Api;
 
 using DSRLearn.Services.Settings;
+using DSRLearn.Services.Logger;
 public static class Bootstrapper
 {
     public static IServiceCollection RegisterServices(this IServiceCollection services)
@@ -8,7 +9,8 @@ public static class Bootstrapper
         services
             .AddMainSettings()
             .AddSwaggerSettings()
-            .AddLogSettings();
+            .AddLogSettings()
+            .AddAppLogger();
 
         return services;
     }

@@ -1,4 +1,4 @@
-﻿namespace NetSchool.Common.Validator;
+﻿namespace DSRLearn.Common.Validator;
 
 using FluentValidation;
 

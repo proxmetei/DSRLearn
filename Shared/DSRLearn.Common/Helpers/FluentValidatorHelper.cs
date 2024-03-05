@@ -1,4 +1,4 @@
-﻿namespace NetSchool.Common.Helpers;
+﻿namespace DSRLearn.Common.Helpers;
 
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +10,7 @@ public static class ValidatorsRegisterHelper
     public static void Register(IServiceCollection services)
     {
         var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-            .Where(s => s.FullName != null && s.FullName.ToLower().StartsWith("netschool."));
+            .Where(s => s.FullName != null && s.FullName.ToLower().StartsWith("dsrlearn."));
 
         assemblies.ToList().ForEach(x => { services.AddValidatorsFromAssembly(x, ServiceLifetime.Singleton); });
     }

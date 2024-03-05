@@ -1,4 +1,4 @@
-﻿namespace NetSchool.Common;
+﻿namespace DSRLearn.Common;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;

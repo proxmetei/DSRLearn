@@ -1,4 +1,4 @@
-﻿namespace NetSchool.Common;
+﻿namespace DSRLearn.Common;
 
 using System;
 using System.Reflection;
