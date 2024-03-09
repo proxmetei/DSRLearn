@@ -1,5 +1,7 @@
 using DSRLearn.Api;
 using DSRLearn.Api.Configuration;
+using DSRLearn.Context;
+using DSRLearn.Context.Seeder;
 using DSRLearn.Services.Settings;
 using DSRLearn.Settings;
 
@@ -15,6 +17,8 @@ var services = builder.Services;
 
 services.AddHttpContextAccessor();
 
+services.AddAppDbContext(builder.Configuration);
+
 services.AddAppCors();
 
 services.AddAppHealthChecks();
@@ -29,7 +33,7 @@ services.AddAppValidator();
 
 services.AddAppControllerAndViews();
 
-services.RegisterServices();
+services.RegisterServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -40,5 +44,9 @@ app.UseAppHealthChecks();
 app.UseAppSwagger();
 
 app.UseAppControllerAndViews();
+
+DbInitializer.Execute(app.Services);
+
+DbSeeder.Execute(app.Services);
 
 app.Run();
