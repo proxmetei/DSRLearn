@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSRLearn.Context.Migrations
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSRLearn.Context.Seeder", "Data\NetSchool.Context.Seeder\DSRLearn.Context.Seeder.csproj", "{3F70ABBB-3B20-43FA-8E4D-D54506EB3FE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSRLearn.Services.Debts", "Services\DSRLearn.Services.Debts\DSRLearn.Services.Debts.csproj", "{2E4EE557-9DE8-42AD-970F-45A8530FB389}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{3F70ABBB-3B20-43FA-8E4D-D54506EB3FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F70ABBB-3B20-43FA-8E4D-D54506EB3FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F70ABBB-3B20-43FA-8E4D-D54506EB3FE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E4EE557-9DE8-42AD-970F-45A8530FB389}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E4EE557-9DE8-42AD-970F-45A8530FB389}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E4EE557-9DE8-42AD-970F-45A8530FB389}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E4EE557-9DE8-42AD-970F-45A8530FB389}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +112,7 @@ Global
 		{AFC05225-4E2D-4E05-8C9E-F0F7EB9BA430} = {C692E9F8-AF36-4F4E-BCF3-2B73784FBA99}
 		{7DA197A8-9198-4CB2-9BDB-7826C2562E4D} = {C692E9F8-AF36-4F4E-BCF3-2B73784FBA99}
 		{3F70ABBB-3B20-43FA-8E4D-D54506EB3FE8} = {6FC8077A-7428-491C-9D07-B8D4A79B6D25}
+		{2E4EE557-9DE8-42AD-970F-45A8530FB389} = {28D51352-44A7-42A8-9A22-CF73B7C35413}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5F1F1B22-84BF-47EE-8627-23E0129E7F95}

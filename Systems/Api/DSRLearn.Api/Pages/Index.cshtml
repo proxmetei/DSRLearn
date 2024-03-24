@@ -4,6 +4,15 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">DSRLearn Api</h1>
+<div>
+    <div style="margin-bottom: 20px">
+        <div><a href="/health">Check health</a></div>
+        @if (Model.OpenApiEnabled)
+        {
+            <div><a href="/docs/index.html">Swagger</a></div>    
+        }
+    </div>
+    <div style="color: palevioletred">
+        @Model.Version
+    </div>
 </div>

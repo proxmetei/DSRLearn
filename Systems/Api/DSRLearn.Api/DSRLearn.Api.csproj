@@ -30,6 +30,7 @@
     <ProjectReference Include="..\..\..\Data\Migrations\DSRLearn.Context.Migrations.PgSql\DSRLearn.Context.Migrations.PgSql.csproj" />
     <ProjectReference Include="..\..\..\Data\NetSchool.Context.Seeder\DSRLearn.Context.Seeder.csproj" />
     <ProjectReference Include="..\..\..\Data\NetSchool.Context\DSRLearn.Context.csproj" />
+    <ProjectReference Include="..\..\..\Services\DSRLearn.Services.Debts\DSRLearn.Services.Debts.csproj" />
     <ProjectReference Include="..\..\..\Services\NetSchool.Services.Logger\DSRLearn.Services.Logger.csproj" />
     <ProjectReference Include="..\..\..\Services\NetSchool.Services.Settings\DSRLearn.Services.Settings.csproj" />
     <ProjectReference Include="..\..\..\Shared\DSRLearn.Common\DSRLearn.Common.csproj" />
