@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DSRLearn.Common.ValidationRules;
 using DSRLearn.Context;
 using DSRLearn.Context.Entities;
 using FluentValidation;
@@ -36,8 +37,8 @@ namespace DSRLearn.Services.Debts
             {
                 using var db = contextFactory.CreateDbContext();
 
-                var creditor = db.Users.FirstOrDefault(x => x.Uid == source.CreditorId);
-                var debtor = db.Users.FirstOrDefault(x => x.Uid == source.DebtorId);
+                var creditor = db.UserProfile.FirstOrDefault(x => x.Id == source.CreditorId);
+                var debtor = db.UserProfile.FirstOrDefault(x => x.Id == source.DebtorId);
 
                 destination.CreditorId = creditor.Id;
                 destination.DebtorId = debtor.Id;
@@ -45,18 +46,18 @@ namespace DSRLearn.Services.Debts
         }
     }
 
-    public class CreateBookModelValidator : AbstractValidator<CreateDebtModel>
+    public class CreateDebtModelValidator : AbstractValidator<CreateDebtModel>
     {
-        public CreateBookModelValidator(IDbContextFactory<MainDbContext> contextFactory)
+        public CreateDebtModelValidator(IDbContextFactory<MainDbContext> contextFactory)
         {
-            RuleFor(x => x.Amount).GreaterThan(0).WithMessage("Amount of debt must be greater than 0");
+            RuleFor(x => x.Amount).DebtAmount();
 
             RuleFor(x => x.DebtorId)
                 .NotEmpty().WithMessage("Debtor is required")
                 .Must((id) =>
                 {
                     using var context = contextFactory.CreateDbContext();
-                    var found = context.Users.Any(a => a.Uid == id);
+                    var found = context.UserProfile.Any(a => a.Id == id);
                     return found;
                 }).WithMessage("Debtor not found");
 
@@ -65,13 +66,11 @@ namespace DSRLearn.Services.Debts
                 .Must((id) =>
                 {
                     using var context = contextFactory.CreateDbContext();
-                    var found = context.Users.Any(a => a.Uid == id);
+                    var found = context.UserProfile.Any(a => a.Id == id);
                     return found;
                 }).WithMessage("Creditor not found");
 
-            RuleFor(x => x.RepaidDate)
-                .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Now))
-                .WithMessage("Repaid date can not be in the past");
+            RuleFor(x => x.RepaidDate).DebtRepaidDate();
         }
     }
 }

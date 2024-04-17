@@ -14,12 +14,17 @@ namespace DSRLearn.Api.Pages
         public bool OpenApiEnabled => settings.Enabled;
 
         [BindProperty]
+        public string IdentityServerUrl => identitySettings.Url;
+
+        [BindProperty]
         public string Version => Assembly.GetExecutingAssembly().GetAssemblyVersion();
 
         private readonly SwaggerSettings settings;
-        public IndexModel(SwaggerSettings settings)
+        private readonly IdentitySettings identitySettings;
+        public IndexModel(SwaggerSettings settings, IdentitySettings identitySettings)
         {
             this.settings = settings;
+            this.identitySettings = identitySettings;
         }
 
         public void OnGet()

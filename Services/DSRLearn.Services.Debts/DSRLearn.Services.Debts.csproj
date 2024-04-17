@@ -1,9 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
@@ -13,11 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Payments\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Data\NetSchool.Context\DSRLearn.Context.csproj" />
+    <ProjectReference Include="..\..\Data\DSRLearn.Context\DSRLearn.Context.csproj" />
   </ItemGroup>
 
 </Project>

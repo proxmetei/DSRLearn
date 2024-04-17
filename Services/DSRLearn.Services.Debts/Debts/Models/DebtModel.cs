@@ -13,9 +13,9 @@ namespace DSRLearn.Services.Debts
         public int Amount { get; set; }
         public DateOnly RepaidDate { get; set; }
     }
-    public class BookModelProfile : Profile
+    public class DebtModelProfile : Profile
     {
-        public BookModelProfile()
+        public DebtModelProfile()
         {
             CreateMap<Debt, DebtModel>()
                 .BeforeMap<DebtModelActions>()
@@ -41,8 +41,8 @@ namespace DSRLearn.Services.Debts
                 var debt = db.Debts.Include(x => x.Creditor).Include(x => x.Debtor).FirstOrDefault(x => x.Id == source.Id);
 
                 destination.Id = debt.Uid;
-                destination.CreditorId = debt.Creditor.Uid;
-                destination.DebtorId = debt.Debtor.Uid;
+                destination.CreditorId = debt.Creditor.Id;
+                destination.DebtorId = debt.Debtor.Id;
             }
         }
     }

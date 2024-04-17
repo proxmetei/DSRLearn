@@ -8,6 +8,7 @@ using DSRLearn.Settings;
 var mainSettings = Settings.Load<MainSettings>("Main");
 var logSettings = Settings.Load<LogSettings>("Log");
 var swaggerSettings = Settings.Load<SwaggerSettings>("Swagger");
+var identitySettings = Settings.Load<IdentitySettings>("Identity");
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,15 +26,19 @@ services.AddAppHealthChecks();
 
 services.AddAppVersioning();
 
-services.AddAppSwagger(mainSettings, swaggerSettings);
+services.AddAppSwagger(mainSettings, swaggerSettings, identitySettings);
 
 services.AddAppAutoMappers();
 
 services.AddAppValidator();
 
+services.AddAppAuth(identitySettings);
+
 services.AddAppControllerAndViews();
 
 services.RegisterServices(builder.Configuration);
+
+
 
 var app = builder.Build();
 
@@ -42,6 +47,8 @@ app.UseAppCors();
 app.UseAppHealthChecks();
 
 app.UseAppSwagger();
+
+app.UseAppAuth();
 
 app.UseAppControllerAndViews();
 

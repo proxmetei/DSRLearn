@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using DSRLearn.Common.ValidationRules;
 using DSRLearn.Context.Entities;
 using FluentValidation;
 
@@ -27,11 +28,9 @@ namespace DSRLearn.Services.Debts
     {
         public UpdateModelValidator()
         {
-            RuleFor(x => x.Amount).GreaterThan(0).WithMessage("Amount of debt must be greater than 0");
+            RuleFor(x => x.Amount).DebtAmount();
 
-            RuleFor(x => x.RepaidDate)
-                .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Now))
-                .WithMessage("Repaid date can not be in the past");
+            RuleFor(x => x.RepaidDate).DebtRepaidDate();
         }
     }
 }

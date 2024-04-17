@@ -37,7 +37,7 @@ namespace DSRLearn.Services.Debts
             var debts = await context.Debts
                 .Include(x => x.Creditor)
                 .Include(x => x.Debtor)
-                .Where(x => x.Debtor.Uid == debtorId)
+                .Where(x => x.Debtor.Id == debtorId)
                 .ToArrayAsync();
 
             var result = mapper.Map<IEnumerable<DebtModel>>(debts);
@@ -50,7 +50,7 @@ namespace DSRLearn.Services.Debts
             var debts = await context.Debts
                 .Include(x => x.Debtor)
                 .Include(x => x.Creditor)
-                .Where(x => x.Creditor.Uid == creditorId)
+                .Where(x => x.Creditor.Id == creditorId)
                 .ToArrayAsync();
 
             var result = mapper.Map<IEnumerable<DebtModel>>(debts);

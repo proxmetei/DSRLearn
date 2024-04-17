@@ -1,0 +1,47 @@
+version: '3.4'
+
+services:
+
+  dsrlearn_postgresql:
+    image: postgres:14.1
+    
+  dsrlearn_rabbitmq:
+    image: rabbitmq:management
+            
+  dsrlearn_api:
+    image: ${DOCKER_REGISTRY-}dsrlearnapi
+    build:
+      context: .
+      dockerfile: Systems/Api/DSRLearn.Api/Dockerfile
+    depends_on:
+      - dsrlearn_postgresql
+      - dsrlearn_rabbitmq
+ 
+  dsrlearn_identity:
+    image: ${DOCKER_REGISTRY-}dsrlearnidentity
+    build:
+      context: .
+      dockerfile: Systems/Identity/DSRLearn.Identity/Dockerfile
+    depends_on:
+      - dsrlearn_postgresql
+      - dsrlearn_api
+
+  # dsrnetschool_worker_1:
+  #   image: ${DOCKER_REGISTRY-}netschoolworker
+  #   build:
+  #     context: .
+  #     dockerfile: Systems/Worker/NetSchool.Worker/Dockerfile
+  #   depends_on:
+  #     - netschool_postgresql
+  #     - netschool_rabbitmq
+  #     - netschool_api
+
+  # dsrnetschool_worker_2:
+  #   image: ${DOCKER_REGISTRY-}netschoolworker
+  #   build:
+  #     context: .
+  #     dockerfile: Systems/Worker/NetSchool.Worker/Dockerfile
+  #   depends_on:
+  #     - netschool_postgresql
+  #     - netschool_rabbitmq
+  #     - netschool_api 

@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using DSRLearn.Common.Security;
 using DSRLearn.Services.Debts;
 using DSRLearn.Services.Logger;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DSRLearn.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [ApiExplorerSettings(GroupName = "Product")]
@@ -22,6 +24,7 @@ namespace DSRLearn.Api.Controllers
         }
 
         [HttpGet("")]
+        [Authorize(AppScopes.User)]
         public async Task<IEnumerable<DebtModel>> GetAll()
         {
             var result = await debtService.GetAll();
@@ -30,6 +33,7 @@ namespace DSRLearn.Api.Controllers
         }
 
         [HttpGet("{id:Guid}")]
+        [Authorize(AppScopes.User)]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var result = await debtService.GetById(id);
@@ -40,6 +44,7 @@ namespace DSRLearn.Api.Controllers
             return Ok(result);
         }
         [HttpGet("[action]/{id:Guid}")]
+        [Authorize(AppScopes.User)]
         public async Task<IActionResult> GetByCreditorId([FromRoute] Guid id)
         {
             var result = await debtService.GetByCreditorId(id);
@@ -50,6 +55,7 @@ namespace DSRLearn.Api.Controllers
             return Ok(result);
         }
         [HttpGet("[action]/{id:Guid}")]
+        [Authorize(AppScopes.User)]
         public async Task<IActionResult> GetByDebtorId([FromRoute] Guid id)
         {
             var result = await debtService.GetByDebtorId(id);
@@ -61,6 +67,7 @@ namespace DSRLearn.Api.Controllers
         }
 
         [HttpPost("")]
+        [Authorize(AppScopes.Admin)]
         public async Task<DebtModel> Create(CreateDebtModel request)
         {
             var result = await debtService.Create(request);
@@ -69,12 +76,14 @@ namespace DSRLearn.Api.Controllers
         }
 
         [HttpPut("{id:Guid}")]
+        [Authorize(AppScopes.Admin)]
         public async Task Update([FromRoute] Guid id, UpdateDebtModel request)
         {
             await debtService.Update(id, request);
         }
 
         [HttpDelete("{id:Guid}")]
+        [Authorize(AppScopes.Admin)]
         public async Task Delete([FromRoute] Guid id)
         {
             await debtService.Delete(id);

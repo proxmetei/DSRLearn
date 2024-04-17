@@ -7,6 +7,8 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Reflection;
 using Asp.Versioning.ApiExplorer;
+using DSRLearn.Common.Security;
+
 // using DSRLearn.Common.Security;
 
 /// <summary>
@@ -24,8 +26,8 @@ public static class SwaggerConfiguration
     /// <param name="swaggerSettings"></param>
     public static IServiceCollection AddAppSwagger(this IServiceCollection services, 
         MainSettings mainSettings, 
-        SwaggerSettings swaggerSettings
-        //IdentitySettings identitySettings
+        SwaggerSettings swaggerSettings,
+        IdentitySettings identitySettings
         )
     {
         if (!swaggerSettings.Enabled)
@@ -68,23 +70,23 @@ public static class SwaggerConfiguration
                 In = ParameterLocation.Header,
                 Flows = new OpenApiOAuthFlows
                 {
-                    //ClientCredentials = new OpenApiOAuthFlow
-                    //{
-                    //    TokenUrl = new Uri($"{identitySettings.Url}/connect/token"),
-                    //    Scopes = new Dictionary<string, string>
-                    //    {
-                    //        { "Admin", "Admin scope" },
-                    //        { "User", "User scope" }
-                    //    }
-                    //},
+                    ClientCredentials = new OpenApiOAuthFlow
+                    {
+                        TokenUrl = new Uri($"{identitySettings.Url}/connect/token"),
+                        Scopes = new Dictionary<string, string>
+                        {
+                            { AppScopes.Admin, "Admin scope" },
+                            { AppScopes.User, "User scope" }
+                        }
+                    },
 
                     Password = new OpenApiOAuthFlow
                     {
-                        TokenUrl = new Uri($"{mainSettings.PublicUrl}/connect/token"),
+                        TokenUrl = new Uri($"{identitySettings.Url}/connect/token"),
                         Scopes = new Dictionary<string, string>
                         {
-                            { "Admin", "Admin scope" },
-                            { "User", "User scope" }
+                            { AppScopes.Admin, "Admin scope" },
+                            { AppScopes.User, "User scope" }
                         }
                     }
                 }
