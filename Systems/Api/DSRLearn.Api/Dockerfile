@@ -16,11 +16,13 @@ COPY ["Services/DSRLearn.Services.Settings/DSRLearn.Services.Settings.csproj", "
 COPY ["Shared/DSRLearn.Common/DSRLearn.Common.csproj", "Shared/DSRLearn.Common/"]
 COPY ["Data/DSRLearn.Context.Entities/DSRLearn.Context.Entities.csproj", "Data/DSRLearn.Context.Entities/"]
 COPY ["Services/DSRLearn.Services.UserAccount/DSRLearn.Services.UserAccount.csproj", "Services/DSRLearn.Services.UserAccount/"]
+COPY ["Services/DSRLearn.Services.Actions/DSRLearn.Services.Actions.csproj", "Services/DSRLearn.Services.Actions/"]
+COPY ["Services/DSRLearn.Services.RabbitMq/DSRLearn.Services.RabbitMq.csproj", "Services/DSRLearn.Services.RabbitMq/"]
 COPY ["Data/Migrations/DSRLearn.Context.Migrations.MySql/DSRLearn.Context.Migrations.MySql.csproj", "Data/Migrations/DSRLearn.Context.Migrations.MySql/"]
 COPY ["Data/Migrations/DSRLearn.Context.Migrations.PgSql/DSRLearn.Context.Migrations.PgSql.csproj", "Data/Migrations/DSRLearn.Context.Migrations.PgSql/"]
-COPY ["DSRLearn.Services.Payments/DSRLearn.Services.Payments.csproj", "DSRLearn.Services.Payments/"]
+COPY ["Services/DSRLearn.Services.HostedMessage/DSRLearn.Services.HostedMessage.csproj", "Services/DSRLearn.Services.HostedMessage/"]
 COPY ["Services/DSRLearn.Services.Logger/DSRLearn.Services.Logger.csproj", "Services/DSRLearn.Services.Logger/"]
-COPY ["Services/DSRLearn.Services.RabbitMq/DSRLearn.Services.RabbitMq.csproj", "Services/DSRLearn.Services.RabbitMq/"]
+COPY ["Services/DSRLearn.Services.Payments/DSRLearn.Services.Payments.csproj", "Services/DSRLearn.Services.Payments/"]
 RUN dotnet restore "./Systems/Api/DSRLearn.Api/DSRLearn.Api.csproj"
 COPY . .
 WORKDIR "/src/Systems/Api/DSRLearn.Api"

@@ -1,0 +1,81 @@
+﻿@using DSRLearn.Web.Pages.Debts.Models
+@using DSRLearn.Web.Pages.Users.Models
+@using DSRLearn.Web.Pages.Debts.Services
+@using DSRLearn.Web.Pages.Users.Services
+@inherits MudComponentBase
+
+@inject IDebtService DebtService
+@inject IUserService UserService
+
+<MudDialog>
+    <DialogContent>
+        <MudForm Model="Model" @ref="form">
+            <MudGrid>
+                <MudItem xs="12" sm="6">
+                    <MudTextField Label="Amount" @bind-Value="Model.Amount"
+                                  For="@(() => Model.Amount)"
+                                  Required="true"
+                                  RequiredError="Amount is required!">
+                    </MudTextField>
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudSelect @ref="selectDebt" T="Guid" Label="Debtor" @bind-Value="Model.Id" For="@(() => Model.Id)">
+                        <MudSelectItem T="Guid" Value="Guid.Empty">&nbsp;</MudSelectItem>
+                        @foreach (var debt in Debts)
+                        {
+                            <MudSelectItem T="Guid" Value="@debt.Id">Id: @debt.Id Amount: @debt.Amount Debtor: @debt.Debtor.Email</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public string DebtEmail { get; set; }
+
+    [Parameter]
+    public NettingDialogModel Model { get; set; } = new NettingDialogModel()
+        {
+            Amount = 1
+        };
+
+    private MudForm form = default!;
+    private List<DebtModel> Debts { get; set; } = new List<DebtModel>();
+
+    MudSelect<Guid> selectDebt = default!;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var debts = await DebtService.GetDebts();
+        var myEmail = await UserService.GetCurrentEmail();
+        
+        foreach (var debt in debts)
+        {
+            debt.Creditor = await UserService.GetUser(debt.CreditorId);
+            debt.Debtor = await UserService.GetUser(debt.DebtorId);
+        }
+        
+        debts = debts.Where(x => x.Debtor.Email == DebtEmail);
+        Debts.AddRange(debts);
+    }
+
+    async Task Submit()
+    {
+        await form.Validate();
+        if (form.IsValid)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+    }
+
+    void Cancel() => MudDialog.Cancel();
+}

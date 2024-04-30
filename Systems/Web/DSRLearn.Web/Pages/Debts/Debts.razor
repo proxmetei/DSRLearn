@@ -1,0 +1,183 @@
+﻿@page "/debts"
+@using DSRLearn.Web.Pages.Debts.Services
+@using DSRLearn.Web.Pages.Users.Services
+@using DSRLearn.Web.Pages.Debts.Models
+@using DSRLearn.Web.Components
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+@inject IDebtService debtService
+@inject IUserService userService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject NavigationManager Navigation
+
+@attribute [Authorize]
+@layout MainLayout
+
+<PageTitle>Debts</PageTitle>
+
+<MudText Typo="Typo.h4" Class="ma-8">Debts</MudText>
+
+<MudTable Items="@debts.Where((x) => !expire || x.RepaidDate.DayNumber - DateOnly.FromDateTime(DateTime.Now).DayNumber < expireDate)"
+    Class="ma-8" T=DebtModel OnRowClick="GoToDebt">
+    <ColGroup>
+        <col style="width:50px;" />
+        <col />
+        <col />
+        <col />
+        <col style="width:100px;" />
+    </ColGroup>
+    <ToolBarContent>
+        <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddDebt">Add</MudButton>
+        <MudSpacer />
+        @if (!expire)
+        {
+            <MudButton StartIcon="@Icons.Material.Filled.Fireplace" Variant="Variant.Filled" Color="Color.Primary" OnClick="() => expire=true">Expiring Debts</MudButton>
+        }
+        else
+        {
+            <MudButton StartIcon="@Icons.Material.Filled.Water" Variant="Variant.Filled" Color="Color.Primary" OnClick="() => expire=false">Original Debts</MudButton>
+        }
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Amount</MudTh>
+        <MudTh>RepaidDate</MudTh>
+        <MudTh>CreditorEmail</MudTh>
+        <MudTh>DebtorEmail</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Title">@context.Amount</MudTd>
+        <MudTd DataLabel="Author">@context.RepaidDate</MudTd>
+        <MudTd DataLabel="CreditorEmail">@context.Creditor.Email</MudTd>
+        <MudTd DataLabel="DebtorEmail">@context.Debtor.Email</MudTd>
+        <MudTd>
+            @if (context.Creditor.Email == email)
+            {
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => EditDebt(context.Id)"/>
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => DeleteDebt(context.Id)"/>
+            }
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    private IEnumerable<DebtModel> debts = new List<DebtModel>();
+    private string searchString = string.Empty;
+    private string email = string.Empty;
+    private bool expire = false;
+    private const int  expireDate = 5;
+
+    private async Task ReloadData()
+    {
+        debts = await debtService.GetAll();
+        foreach (var debt in debts)
+        {
+            debt.Debtor = await userService.GetUser(debt.DebtorId);
+            debt.Creditor = await userService.GetUser(debt.CreditorId);
+        }
+        email = await userService.GetCurrentEmail();
+    }
+
+    private void GoToDebt(TableRowClickEventArgs<DebtModel> tableRowClickEventArgs)
+    {
+        Navigation.NavigateTo($"/debt/{tableRowClickEventArgs.Item.Id}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await ReloadData();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task AddDebt()
+    {
+        var parameters = new DialogParameters { };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+
+        var dialog = await DialogService.ShowAsync<DebtDialog>("Add debt", parameters, options);
+       var result = await dialog.Result;
+
+        if (result.Canceled)
+            return;
+
+        try
+        {
+            var creditor = await userService.GetUserByEmail(email);
+            var debtModel = ((DebtDialog)dialog.Dialog).Model;
+            
+            var createModel = new CreateDebtModel()
+            {
+                DebtorId = debtModel.DebtorId,
+                CreditorId = creditor.Id,
+                Amount = debtModel.Amount,
+                RepaidDate = DateOnly.FromDateTime(debtModel.RepaidDate ?? DateTime.Now)
+            };
+            
+            await debtService.AddDebt(createModel);
+            await ReloadData();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+    
+    private async Task EditDebt(Guid debtId)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("DebtId", debtId);
+
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = DialogService.Show<DebtDialog>("Edit debt", parameters, options);
+        var result = await dialog.Result;
+
+        if (result.Canceled)
+            return;
+
+        var debtModel = ((DebtDialog)dialog.Dialog).Model;
+        var updateModel = new UpdateDebtModel()
+        {
+            Id = debtId,
+            Amount = debtModel.Amount,
+            RepaidDate = DateOnly.FromDateTime(debtModel.RepaidDate ?? DateTime.Now)
+        };
+        
+        await debtService.EditDebt(updateModel);
+        await ReloadData();
+    }
+
+    private async Task DeleteDebt(Guid debtId)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Do you really want to delete this debt? This process cannot be undone.");
+        parameters.Add("ButtonText", "Delete");
+        parameters.Add("Color", Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var dialog = await DialogService.ShowAsync<ConfirmationDialog>("Delete debt", parameters, options);
+        var result = await dialog.Result;
+
+        if (result.Canceled)
+            return;
+        
+        await debtService.DeleteDebt(debtId);
+        await ReloadData();
+    }
+}

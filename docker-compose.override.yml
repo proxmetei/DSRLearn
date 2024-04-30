@@ -40,24 +40,25 @@ services:
     env_file:
       - env.identity
 
-  # dsrnetschool_worker_1:
-  #   networks:
-  #     - shared_netschool_net
-  #   ports:
-  #     - "10002:8080"
-  #   env_file:
-  #     - env.worker
+  dsrlearn_worker_1:
+    networks:
+      - shared_dsrlearn_net
+    ports:
+      - "10002:8080"
+    env_file:
+      - env.worker
 
-  # dsrnetschool_worker_2:
-  #   networks:
-  #     - shared_netschool_net
-  #   ports:
-  #     - "10003:8080"
-  #   env_file:
-  #     - env.worker
+  dsrlearn_worker_2:
+    networks:
+      - shared_dsrlearn_net
+    ports:
+      - "10003:8080"
+    env_file:
+      - env.worker
 
 
 networks:
   shared_dsrlearn_net:
     name: dsrlearn
     driver: bridge
+  

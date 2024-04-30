@@ -1,0 +1,89 @@
+﻿@using DSRLearn.Web.Pages.Debts.Models
+@using DSRLearn.Web.Pages.Users.Models
+@using DSRLearn.Web.Pages.Debts.Services
+@using DSRLearn.Web.Pages.Users.Services
+@inherits MudComponentBase
+
+@inject IDebtService DebtService
+@inject IUserService UserService
+
+<MudDialog>
+    <DialogContent>
+        <MudForm Model="Model" @ref="form">
+            <MudGrid>
+                <MudItem xs="12" sm="6">
+                    <MudTextField Label="Amount" @bind-Value="Model.Amount"
+                                  For="@(() => Model.Amount)"
+                                  Required="true"
+                                  Disabled="DebtId != null"
+                                  RequiredError="Amount is required!">
+                    </MudTextField>
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudSelect Disabled="DebtId != null" @ref="selectDebtor" T="Guid" Label="Debtor" @bind-Value="Model.DebtorId" For="@(() => Model.DebtorId)">
+                        <MudSelectItem T="Guid" Value="Guid.Empty">&nbsp;</MudSelectItem>
+                        @foreach (var debtor in Users)
+                        {
+                            <MudSelectItem T="Guid" Value="@debtor.Id">@debtor.Email</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudDatePicker Label="Repaid Date"
+                                   For="@(() => Model.RepaidDate)"
+                                   @bind-Date="Model.RepaidDate">
+                    </MudDatePicker>
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public Guid? DebtId { get; set; }
+
+    [Parameter] public DebtDialogModel Model { get; set; } = new DebtDialogModel()
+    {
+     Amount = 1,
+     RepaidDate = DateTime.Now
+    };
+
+    private MudForm form = default!;
+
+    MudSelect<Guid> selectDebtor = default!;
+    private List<UserModel> Users { get; set; } = new List<UserModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var users = await UserService.GetAll();
+        var myEmail = await UserService.GetCurrentEmail();
+        users = users.Where(x => x.Email != myEmail);
+        Users.AddRange(users);
+
+        if (DebtId != null)
+        {
+            var debt = await DebtService.GetDebt(DebtId.Value);
+            users = (new List<UserModel>()).Append( await UserService.GetUser(debt.DebtorId));
+            Model.DebtorId = debt.DebtorId;
+            Model.Amount = debt.Amount;
+            Model.RepaidDate = debt.RepaidDate.ToDateTime(TimeOnly.MinValue);
+        }
+    }
+
+    async Task Submit()
+    {
+        await form.Validate();
+        if (form.IsValid)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+    }
+
+    void Cancel() => MudDialog.Cancel();
+}

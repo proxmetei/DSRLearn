@@ -1,0 +1,150 @@
+﻿@page "/debt/{id:guid}"
+@using DSRLearn.Web.Pages.Debts.Services
+@using DSRLearn.Web.Pages.Payments.Models
+@using DSRLearn.Web.Pages.Payments.Services
+@using DSRLearn.Web.Pages.Users.Services
+@using DSRLearn.Web.Pages.Debts.Models
+@using DSRLearn.Web.Pages.Payments
+@using DSRLearn.Web.Components
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+
+@inject IDebtService debtService
+@inject IPaymentService paymentService
+@inject IUserService userService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject NavigationManager Navigation
+
+@attribute [Authorize]
+@layout MainLayout
+
+<PageTitle>Payments</PageTitle>
+
+<MudText Typo="Typo.h4" Class="ma-8">Payments</MudText>
+
+<MudTable Items="@payments" Class="ma-8" T=PaymentModel>
+    <ColGroup>
+        <col style="width:50px;" />
+        <col />
+        <col />
+        <col />
+        <col style="width:100px;" />
+    </ColGroup>
+    <ToolBarContent>
+        @if (debt.Debtor != null && debt.Debtor.Email == email)
+        {
+            <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddPayment">Add</MudButton>
+            <MudSpacer />
+            <MudButton StartIcon="@Icons.Material.Filled.CurrencyExchange" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddNetting">Netting</MudButton>
+        }
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Amount</MudTh>
+        <MudTh>Date</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Title">@context.Amount</MudTd>
+        <MudTd DataLabel="Author">@context.Date</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    private IEnumerable<PaymentModel> payments = new List<PaymentModel>();
+    private string searchString = string.Empty;
+    private string email = string.Empty;
+    private DebtModel debt = new ();
+
+    private async Task ReloadData()
+    {
+        payments = await paymentService.GetByDebt(Id);
+        debt = await debtService.GetDebt(Id);
+        debt.Debtor = await userService.GetUser(debt.DebtorId);
+        debt.Creditor = await userService.GetUser(debt.CreditorId);
+        email = await userService.GetCurrentEmail();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await ReloadData();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task AddPayment()
+    {
+        var parameters = new DialogParameters { };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+
+        var dialog = await DialogService.ShowAsync<PaymentDialog>("Add payment", parameters, options);
+        var result = await dialog.Result;
+
+        if (result.Canceled)
+            return;
+
+        try
+        {
+            var creditor = await userService.GetUserByEmail(email);
+            var paymentModel = ((PaymentDialog)dialog.Dialog).Model;
+            var createModel = new CreatePaymentModel()
+                {
+                    DebtId = Id,
+                    Amount = paymentModel.Amount,
+                    Date = DateOnly.FromDateTime(DateTime.Now)
+                };
+            await paymentService.AddPayment(createModel);
+            await ReloadData();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+    private async Task AddNetting()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("DebtEmail", debt.Creditor.Email);
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+
+        var dialog = await DialogService.ShowAsync<NettingDialog>("Add netting", parameters, options);
+        var result = await dialog.Result;
+
+        if (result.Canceled)
+            return;
+
+        try
+        {
+            var creditor = await userService.GetUserByEmail(email);
+            var nettingModel = ((NettingDialog)dialog.Dialog).Model;
+            var createModel = new CreateNettingModel()
+                {
+                    Id1 = Id,
+                    Amount = nettingModel.Amount,
+                    Id2 = nettingModel.Id
+                };
+            await debtService.NettingDebt(createModel);
+            await ReloadData();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DSRLearn.Common.Exceptions;
 using DSRLearn.Common.Validator;
 using DSRLearn.Context;
 using DSRLearn.Context.Entities;
 using Microsoft.EntityFrameworkCore;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace DSRLearn.Services.Debts
 {
@@ -34,6 +28,7 @@ namespace DSRLearn.Services.Debts
         public async Task<IEnumerable<DebtModel>> GetByDebtorId(Guid debtorId)
         {
             using var context = await dbContextFactory.CreateDbContextAsync();
+
             var debts = await context.Debts
                 .Include(x => x.Creditor)
                 .Include(x => x.Debtor)
@@ -47,6 +42,7 @@ namespace DSRLearn.Services.Debts
         public async Task<IEnumerable<DebtModel>> GetByCreditorId(Guid creditorId)
         {
             using var context = await dbContextFactory.CreateDbContextAsync();
+
             var debts = await context.Debts
                 .Include(x => x.Debtor)
                 .Include(x => x.Creditor)
@@ -60,6 +56,7 @@ namespace DSRLearn.Services.Debts
         public async Task<DebtModel> GetById(Guid id)
         {
             using var context = await dbContextFactory.CreateDbContextAsync();
+
             var debt = await context.Debts
                 .Include(x => x.Debtor)
                 .Include(x => x.Creditor)
@@ -72,6 +69,7 @@ namespace DSRLearn.Services.Debts
         public async Task<IEnumerable<DebtModel>> GetAll()
         {
             using var context = await dbContextFactory.CreateDbContextAsync();
+
             var debts = await context.Debts
                 .Include(x => x.Debtor)
                 .Include(x => x.Creditor)

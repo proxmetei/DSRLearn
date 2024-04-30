@@ -2,6 +2,7 @@
 
 using DSRLearn.Context;
 using DSRLearn.Context.Entities;
+using DSRLearn.Identity.Configuration.IS4;
 using Microsoft.AspNetCore.Identity;
 
 public static class IS4Configuration
@@ -26,11 +27,12 @@ public static class IS4Configuration
             .AddIdentityServer()
             
             .AddAspNetIdentity<User>()
-
+            .AddProfileService<AppProfileService>()
             .AddInMemoryApiScopes(AppApiScopes.ApiScopes)
             .AddInMemoryClients(AppClients.Clients)
             .AddInMemoryApiResources(AppResources.Resources)
             .AddInMemoryIdentityResources(AppIdentityResources.Resources)
+
 
             //.AddTestUsers(AppApiTestUsers.ApiUsers)
             

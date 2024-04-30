@@ -41,7 +41,9 @@ namespace DSRLearn.Services.Debts
                 var debt = db.Debts.Include(x => x.Creditor).Include(x => x.Debtor).FirstOrDefault(x => x.Id == source.Id);
 
                 destination.Id = debt.Uid;
+
                 destination.CreditorId = debt.Creditor.Id;
+
                 destination.DebtorId = debt.Debtor.Id;
             }
         }

@@ -38,9 +38,11 @@ namespace DSRLearn.Services.Debts
                 using var db = contextFactory.CreateDbContext();
 
                 var creditor = db.UserProfile.FirstOrDefault(x => x.Id == source.CreditorId);
+
                 var debtor = db.UserProfile.FirstOrDefault(x => x.Id == source.DebtorId);
 
                 destination.CreditorId = creditor.Id;
+
                 destination.DebtorId = debtor.Id;
             }
         }

@@ -1,0 +1,51 @@
+﻿@using DSRLearn.Web.Pages.Debts.Models
+@using DSRLearn.Web.Pages.Payments.Models
+@using DSRLearn.Web.Pages.Debts.Services
+@using DSRLearn.Web.Pages.Payments.Services
+@inherits MudComponentBase
+
+@inject IDebtService DebtService
+@inject IPaymentService PaymentService
+
+<MudDialog>
+    <DialogContent>
+        <MudForm Model="Model" @ref="form">
+            <MudGrid>
+                <MudItem xs="12" sm="6">
+                    <MudTextField Label="Amount" @bind-Value="Model.Amount"
+                                  For="@(() => Model.Amount)"
+                                  Required="true"
+                                  RequiredError="Amount is required!">
+                    </MudTextField>
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter]
+    public PaymentDialogModel Model { get; set; } = new PaymentDialogModel()
+        {
+            Amount = 1
+        };
+
+    private MudForm form = default!;
+
+    async Task Submit()
+    {
+        await form.Validate();
+        if (form.IsValid)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+    }
+
+    void Cancel() => MudDialog.Cancel();
+}

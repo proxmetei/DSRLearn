@@ -6,6 +6,8 @@ using DSRLearn.Services.Debts;
 using DSRLearn.Services.Payments;
 using DSRLearn.Services.UserAccount;
 using DSRLearn.Services.RabbitMq;
+using DSRLearn.Services.Actions;
+using DSRLearn.Services.HostedMessage;
 
 public static class Bootstrapper
 {
@@ -20,7 +22,9 @@ public static class Bootstrapper
             .AddDebtService()
             .AddPaymentService()
             .AddUserAccountService()
-            .AddRabbitMq();
+            .AddActions()
+            .AddRabbitMq()
+            .AddUserHostedMessageService();
 
         return services;
     }

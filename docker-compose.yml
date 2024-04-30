@@ -19,6 +19,8 @@ services:
  
   dsrlearn_identity:
     image: ${DOCKER_REGISTRY-}dsrlearnidentity
+    env_file:
+      - env.identity
     build:
       context: .
       dockerfile: Systems/Identity/DSRLearn.Identity/Dockerfile
@@ -26,22 +28,29 @@ services:
       - dsrlearn_postgresql
       - dsrlearn_api
 
-  # dsrnetschool_worker_1:
-  #   image: ${DOCKER_REGISTRY-}netschoolworker
-  #   build:
-  #     context: .
-  #     dockerfile: Systems/Worker/NetSchool.Worker/Dockerfile
-  #   depends_on:
-  #     - netschool_postgresql
-  #     - netschool_rabbitmq
-  #     - netschool_api
+  dsrlearn_worker_1:
+    image: ${DOCKER_REGISTRY-}learnworker
+    build:
+      context: .
+      dockerfile: Systems/Worker/DSRLearn.Worker/Dockerfile
+    depends_on:
+      - dsrlearn_rabbitmq
+      - dsrlearn_api
 
-  # dsrnetschool_worker_2:
-  #   image: ${DOCKER_REGISTRY-}netschoolworker
-  #   build:
-  #     context: .
-  #     dockerfile: Systems/Worker/NetSchool.Worker/Dockerfile
-  #   depends_on:
-  #     - netschool_postgresql
-  #     - netschool_rabbitmq
-  #     - netschool_api 
+  dsrlearn_worker_2:
+    image: ${DOCKER_REGISTRY-}learnworker
+    build:
+      context: .
+      dockerfile: Systems/Worker/DSRLearn.Worker/Dockerfile
+    depends_on:
+      - dsrlearn_rabbitmq
+      - dsrlearn_api
+
+  blazorclientserverclient:
+    image: blazorclientserverclient
+    build:
+      context: .
+      dockerfile: Systems/Web/DSRLearn.Web/Dockerfile
+    ports:
+      - 5080:80
+      - 5443:443

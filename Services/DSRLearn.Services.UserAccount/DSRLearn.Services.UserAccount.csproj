@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\DSRLearn.Context\DSRLearn.Context.csproj" />
     <ProjectReference Include="..\..\Shared\DSRLearn.Common\DSRLearn.Common.csproj" />
+    <ProjectReference Include="..\DSRLearn.Services.Actions\DSRLearn.Services.Actions.csproj" />
   </ItemGroup>
 
 </Project>
